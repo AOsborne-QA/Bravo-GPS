@@ -6,6 +6,8 @@ namespace Radar.Library
     public class Vehicle
     {
 
+        [Key]
+        public Guid VehicleID { get; set; }
 
     }
 }
