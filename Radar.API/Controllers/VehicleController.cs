@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Radar.Library;
 using Radar.Library.Interfaces;
 using Radar.Library.Models.ViewModel;
 using System;
@@ -30,9 +31,9 @@ namespace Radar.API.Controllers
         public IEnumerable<VehicleViewModel> AllVehicleStatuses()
         {
             var allVehicles = repository.Vehicle.FindAll();
-            if (allVehicles.Count() == 0)
+            if (allVehicles == null)
             {
-                _logger.LogError("There are no vehicles currently logged");
+                _logger.LogWarning("There are no vehicles currently logged");
                 return null;
             }
             else
@@ -49,9 +50,16 @@ namespace Radar.API.Controllers
 
         // GET api/<VehicleController>/5
         [HttpGet("{id}")]
-        public ActionResult<Vehicle> VehicleStatus(int id)
+        public ActionResult<Vehicle> VehicleStatus(Guid id)
         {
-            return NotImplementedException;
+            var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
+            if (findVehicle == null)
+            {
+                _logger.LogWarning("No vehicle with this ID has been found. Please recheck ID entered");
+                return NotFound($"Vehicle with ID of {id} was not found. Please recheck ID entered");
+            }
+            _logger.LogInformation($"Vehicle with id {id} has been located and information outputted");
+            return findVehicle;
         }
 
         // POST api/<VehicleController>
