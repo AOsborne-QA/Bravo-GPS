@@ -13,4 +13,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Models\Binding\" />
+  </ItemGroup>
+
 </Project>
