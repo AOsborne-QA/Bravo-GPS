@@ -7,6 +7,29 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Margin ="4" VerticalAlignment="Center">
+            <Label Content="Vehicle ID"/>
+            <TextBox Name="VehilceIDBox"/>
+            <Label Content="Humidity"/>
+            <TextBox Name="HumidityBox"/>
+            <Label Content="Temperature"/>
+            <TextBox Name="TemperatureBox"/>
+            <Label Content="Latitude"/>
+            <TextBox Name="LatitudeBox"/>
+            <Label Content="Longitude"/>
+            <TextBox Name="LongitudeBox"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+            <Label Name="HumidityAlert" Content="Humidity Alert"/>
+            <Label Name="TemperatureAlert" Content ="Temperature Alert"/>
+            
+        </StackPanel>
 
     </Grid>
 </Window>

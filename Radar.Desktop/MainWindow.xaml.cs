@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.SignalR.Client;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace Radar.Desktop
 {
     /// <summary>
@@ -20,9 +22,13 @@ namespace Radar.Desktop
     /// </summary>
     public partial class MainWindow : Window
     {
+        HubConnection connection;
         public MainWindow()
         {
             InitializeComponent();
+
+
+
         }
     }
 }
