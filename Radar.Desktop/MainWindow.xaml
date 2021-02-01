@@ -13,6 +13,8 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Margin ="4" VerticalAlignment="Center">
+            <Button Name="ConnectButton" Content="Connect" Click="connectButton_Click"/>
+
             <Label Content="Vehicle ID"/>
             <TextBox Name="VehilceIDBox"/>
             <Label Content="Humidity"/>
