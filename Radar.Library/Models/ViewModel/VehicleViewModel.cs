@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Radar.Library.Models.ViewModel
 {
-    interface VehicleViewModel
+    public class VehicleViewModel
     {
         public Vehicle Vehicle { get; set; }
     }
