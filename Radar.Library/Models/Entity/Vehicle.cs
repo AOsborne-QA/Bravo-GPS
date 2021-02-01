@@ -1,14 +1,11 @@
-﻿using Radar.Library.Models.Entity;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Radar.Library
 {
-    public class Vehicle:VehicleInfo
+    public class Vehicle
     {
 
-        [Key]
-        public Guid VehicleID { get; set; }
 
     }
 }
