@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Radar.Library.Models.Entity
 {
-    class HumidityAlert
+    public class HumidityAlert : Alert
     {
         public string RetrieveHumidityAlert(Vehicle y)
         {

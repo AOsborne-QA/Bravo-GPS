@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Radar.Library.Models.Entity
 {
-    class TempAlert
+    public class TempAlert : Alert
     {
         public string RetrieveTempAlert(Vehicle x)
         {
