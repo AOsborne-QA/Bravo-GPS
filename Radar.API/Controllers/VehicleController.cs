@@ -19,7 +19,7 @@ namespace Radar.API.Controllers
     [ApiController]
     public class VehicleController : ControllerBase
     {
-        private HubConnection hub;
+
         private ILogger<VehicleController> _logger;
         private IRepositoryWrapper repository;
 
@@ -27,7 +27,7 @@ namespace Radar.API.Controllers
         {
             _logger = logger;
             repository = repositoryWrapper;
-            hub =   new HubConnectionBuilder().WithUrl("https://localhost:44383/alertHub").Build();
+
         }
         // GET: api/<VehicleController>
 
@@ -35,8 +35,7 @@ namespace Radar.API.Controllers
         [HttpGet("status/all")]
         public IEnumerable<VehicleViewModel> AllVehicleStatuses()
         {
-            //This is for checking if the signal r works not permanent
-            hub.InvokeAsync("SendAlert", "vechID", "red", "temperature", DateTime.Now);
+           
 
             var allVehicles = repository.Vehicle.FindAll();
             if (allVehicles == null)
