@@ -76,11 +76,9 @@ namespace Radar.API.Controllers
         {
             var newVehicle = repository.Vehicle.Create(new Vehicle
             {
-                Location =
-                {
-                    Latitude = addVehicle.Location.Latitude,
-                    Longitude = addVehicle.Location.Longitude
-                },
+
+                Latitude = addVehicle.Latitude,
+                Longitude = addVehicle.Longitude,
                 VehicleHumidity = addVehicle.VehicleHumidity,
                 VehicleTemp = addVehicle.VehicleTemp
             });
@@ -101,8 +99,8 @@ namespace Radar.API.Controllers
                 _logger.LogError($"No vehicle with {id} has been found. Please recheck input.");
                 return NotFound($"No Vehicle with {id} has been found. Please recheck input.");
             }
-            findVehicle.Location.Latitude = updateVehicle.Location.Latitude;
-            findVehicle.Location.Longitude = updateVehicle.Location.Longitude;
+            findVehicle.Latitude = updateVehicle.Latitude;
+            findVehicle.Longitude = updateVehicle.Longitude;
             findVehicle.VehicleHumidity = updateVehicle.VehicleHumidity;
             findVehicle.VehicleTemp = updateVehicle.VehicleTemp;
             repository.Save();
