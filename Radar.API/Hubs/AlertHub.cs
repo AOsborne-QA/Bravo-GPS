@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Radar.Library.Models.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,9 @@ namespace Radar.API.Hubs
         }
 
         //This defines a method that can be called by the API (i think for now that's how it will work)
-        public async Task SendAlert(String vehicleID, String alertColour, String alertType, DateTime timeStamp)
+        public async Task SendAlert(Alert alert)
         {
-            await Clients.All.SendAsync("RecieveAlert", vehicleID, alertColour, alertType,timeStamp);
+            await Clients.All.SendAsync("RecieveAlert", alert);
         }
         
     }
