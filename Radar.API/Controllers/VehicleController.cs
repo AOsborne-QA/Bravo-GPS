@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Radar.API.Hubs;
 using Radar.Library;
 using Radar.Library.Interfaces;
 using Radar.Library.Models.ViewModel;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR.Client;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,6 +18,7 @@ namespace Radar.API.Controllers
     [ApiController]
     public class VehicleController : ControllerBase
     {
+        private HubConnection hub;
         private ILogger<VehicleController> _logger;
         private IRepositoryWrapper repository;
 
@@ -23,6 +26,7 @@ namespace Radar.API.Controllers
         {
             _logger = logger;
             repository = repositoryWrapper;
+            hub =   new HubConnectionBuilder().WithUrl("https://localhost:44383/alertHub").Build();
         }
         // GET: api/<VehicleController>
 
@@ -30,6 +34,9 @@ namespace Radar.API.Controllers
         [HttpGet]
         public IEnumerable<VehicleViewModel> AllVehicleStatuses()
         {
+            //This is for checking if the signal r works not permanent
+            hub.InvokeAsync("SendAlert", "vechID", "red", "temperature", DateTime.Now);
+
             var allVehicles = repository.Vehicle.FindAll();
             if (allVehicles == null)
             {
