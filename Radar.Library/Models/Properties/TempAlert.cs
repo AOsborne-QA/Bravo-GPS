@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Radar.Library.Models.Entity;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Radar.Library.Models.Entity
+namespace Radar.Library.Models.Properties
 {
-    class TempAlert
+    public class TempAlert : Alert
     {
         public string RetrieveTempAlert(Vehicle x)
         {

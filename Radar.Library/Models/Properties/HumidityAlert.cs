@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Radar.Library.Models.Entity;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Radar.Library.Models.Entity
+namespace Radar.Library.Models.Properties
 {
-    class HumidityAlert
+    public class HumidityAlert : Alert
     {
         public string RetrieveHumidityAlert(Vehicle y)
         {
