@@ -31,7 +31,8 @@ namespace Radar.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRouting(r => r.LowercaseUrls = true);
-            services.AddControllers();
+           services.AddSignalR(); 
+           services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Radar.API", Version = "v1" });
