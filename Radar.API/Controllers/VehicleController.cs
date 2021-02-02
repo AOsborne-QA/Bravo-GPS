@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Radar.Library;
 using Radar.Library.Interfaces;
+using Radar.Library.Models.Binding;
 using Radar.Library.Models.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace Radar.API.Controllers
         // GET: api/<VehicleController>
 
         // Get vehicle
-        [HttpGet]
+        [HttpGet("status/all")]
         public IEnumerable<VehicleViewModel> AllVehicleStatuses()
         {
             var allVehicles = repository.Vehicle.FindAll();
@@ -43,13 +44,13 @@ namespace Radar.API.Controllers
                 {
                     vehicles.Add(new VehicleViewModel() { Vehicle = vehicle });
                 }
-                _logger.LogInformation("Vehicles found for tracking. Reult returned.");
+                _logger.LogInformation("Vehicles found for tracking. Result returned.");
                 return vehicles;
             }
         }
 
         // GET api/<VehicleController>/5
-        [HttpGet("{id}")]
+        [HttpGet("status/{id}")]
         public ActionResult<Vehicle> VehicleStatus(Guid id)
         {
             var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
@@ -63,21 +64,60 @@ namespace Radar.API.Controllers
         }
 
         // POST api/<VehicleController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("add")]
+        public ActionResult<Vehicle> AddVehicle([FromBody] AddVehicle addVehicle)
         {
+            var newVehicle = repository.Vehicle.Create(new Vehicle
+            {
+                Location =
+                {
+                    Latitude = addVehicle.Location.Latitude,
+                    Longitude = addVehicle.Location.Longitude
+                },
+                VehicleHumidity = addVehicle.VehicleHumidity,
+                VehicleTemp = addVehicle.VehicleTemp
+            });
+            repository.Save();
+            _logger.LogInformation($"Vehicle has been successfully added with ID {newVehicle.VehicleID}.");
+            return newVehicle;
+
         }
+
 
         // PUT api/<VehicleController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("update/{id}")]
+        public ActionResult<Vehicle> UpdateVehicleStatus(Guid id, [FromBody] UpdateVehicle updateVehicle)
         {
+            var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
+            if (findVehicle == null)
+            {
+                _logger.LogError($"No vehicle with {id} has been found. Please recheck input.");
+                return NotFound($"No Vehicle with {id} has been found. Please recheck input.");
+            }
+            findVehicle.Location.Latitude = updateVehicle.Location.Latitude;
+            findVehicle.Location.Longitude = updateVehicle.Location.Longitude;
+            findVehicle.VehicleHumidity = updateVehicle.VehicleHumidity;
+            findVehicle.VehicleTemp = updateVehicle.VehicleTemp;
+            repository.Save();
+            _logger.LogInformation($"Vehicle id: {id} has updated information");
+            return Ok($"Vehicle id: {id} has updated information");
         }
 
-        // DELETE api/<VehicleController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+    // DELETE api/<VehicleController>/5
+    [HttpDelete("remove/{id}")]
+    public IActionResult RemoveVehicle(Guid id)
+    {
+            var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
+            if (findVehicle == null)
+            {
+                _logger.LogError($"No vehicle with {id} has been found. Please recheck input.");
+                return NotFound($"No Vehicle with {id} has been found. Please recheck input.");
+            }
+            _logger.LogInformation($"Removing vehicle id {id} from tracking.");
+            repository.Vehicle.Delete(findVehicle);
+            repository.Save();
+            _logger.LogInformation($"Vehicle with {id} is no longer tracked and has been removed.");
+            return Ok($"Vehicle with {id} is no longer tracked and has been removed.");
         }
-    }
+}
 }
