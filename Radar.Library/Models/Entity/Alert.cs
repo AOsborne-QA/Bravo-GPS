@@ -8,21 +8,13 @@ namespace Radar.Library.Models.Entity
 {
     public class Alert : VehicleInfo
     {
-       
         public int ID { get; set; }
-        [ForeignKey("VehicleID")]
-        
+        public Vehicle vehicle { get; set; }
+        [ForeignKey("Vehicle")]
         public Guid VehicleID { get; set; }
-
-        public DateTime AlertTime
-        {
-            get { return AlertTime; }
-            set { AlertTime = DateTime.Now; }
-        }
+        public DateTime AlertTime { get; set; }
         // Red, Amber, or Green
         public string AlertColour { get; set; }
-
         public string AlertType { get; set; }
-
     }
 }

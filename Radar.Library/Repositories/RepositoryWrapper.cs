@@ -1,8 +1,5 @@
 ﻿using Radar.Library.Data;
 using Radar.Library.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Radar.Library.Repositories
 {
@@ -14,6 +11,7 @@ namespace Radar.Library.Repositories
             _repoContext = repoContext;
         }
         IVehicleRepository _vehicles;
+        IAlertRepository _alerts;
         public IVehicleRepository Vehicle
         {
             get
@@ -23,6 +21,18 @@ namespace Radar.Library.Repositories
                     _vehicles = new VehicleRepository(_repoContext);
                 }
                 return _vehicles;
+            }
+        }
+
+        public IAlertRepository Alert
+        {
+            get
+            {
+                if (_alerts == null)
+                {
+                    _alerts = new AlertRepository(_repoContext);
+                }
+                return _alerts;
             }
         }
 
