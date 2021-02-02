@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Logging;
+using Radar.Library.Interfaces;
+using Radar.Library.Models.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +16,35 @@ namespace Radar.API.Controllers
     [ApiController]
     public class AlertController : ControllerBase
     {
-
+        private ILogger<AlertController> _logger;
+        private IRepositoryWrapper repository;
+        public AlertController(ILogger<AlertController> logger, IRepositoryWrapper repositoryWrapper)
+        {
+            _logger = logger;
+            repository = repositoryWrapper;
+        }
 
         // GET: api/<AlertController>
-        [HttpGet]
-        public async Task<IEnumerable<string>> Get()
+        [HttpGet("all")]
+        public IEnumerable<Alert> ViewAll()
         {
- 
-            return new string[] { "value1", "value2" };
+            var allAlerts = repository.Alert.FindAll();
+
+            if(allAlerts == null)
+            {
+                _logger.LogWarning("There are no alerts currently logged");
+                return null;
+            } else
+            {
+                List<Alert> alerts = new List<Alert>();
+                foreach(var alert in allAlerts)
+                {
+                    alerts.Add(alert);
+                }
+                _logger.LogInformation("Vehicles found for tracking. Result returned.");
+                return alerts;
+            }
+            
         }
 
         // GET api/<AlertController>/5
