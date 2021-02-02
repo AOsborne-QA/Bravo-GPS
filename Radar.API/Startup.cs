@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Radar.API.Hubs;
 using Radar.Library.Data;
 using Radar.Library.Interfaces;
 using Radar.Library.Repositories;
@@ -62,6 +63,7 @@ namespace Radar.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<AlertHub>("/alertHub");
             });
         }
     }
