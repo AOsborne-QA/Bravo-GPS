@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Radar.Library\Radar.Library.csproj" />
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>
