@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
+using Radar.Library.Utility;
+using Radar.Library.Models.Entity;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -71,16 +73,21 @@ namespace Radar.API.Controllers
 
         // POST api/<VehicleController>
         [HttpPost("add")]
-        public ActionResult<Vehicle> AddVehicle([FromBody] AddVehicle addVehicle)
+        public async Task<ActionResult<Vehicle>> AddVehicle([FromBody] AddVehicle addVehicle)
         {
             var newVehicle = repository.Vehicle.Create(new Vehicle
             {
-
                 Latitude = addVehicle.Latitude,
                 Longitude = addVehicle.Longitude,
                 VehicleHumidity = addVehicle.VehicleHumidity,
                 VehicleTemp = addVehicle.VehicleTemp
             });
+
+            Alert tAlert = AlertUtility.RetrieveTempAlert(newVehicle);
+            await AlertUtility.SendAlert(tAlert);
+            Alert hAlert = AlertUtility.RetrieveHumidityAlert(newVehicle);
+            await AlertUtility.SendAlert(hAlert);
+
             repository.Save();
             _logger.LogInformation($"Vehicle has been successfully added with ID {newVehicle.VehicleID}.");
             return newVehicle;
@@ -92,22 +99,6 @@ namespace Radar.API.Controllers
         [HttpPut("update/{id}")]
         public async Task<ActionResult<Vehicle>> UpdateVehicleStatus(Guid id, [FromBody] UpdateVehicle updateVehicle)
         {
-            //signalR Test
-            HubConnection hub = new HubConnectionBuilder().WithUrl("https://localhost:44383/alertHub").Build();
-            //This is for checking if the signal r works not permanent
-            try
-            {
-                //tries an initial connection
-                await hub.StartAsync();
-                //puts the message in the connection box
-
-            }
-            catch (Exception exc)
-            {
-                //puts the error message in the connection box if the connection fails
-
-            }
-            await hub.InvokeAsync("SendAlert", "vechID", "Red", "Temperature", DateTime.Now);
 
             var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
             if (findVehicle == null)

@@ -14,11 +14,10 @@ namespace Radar.Library.Models.Entity
         
         public Guid VehicleID { get; set; }
 
-        public DateTime AlertTime
-        {
-            get { return AlertTime; }
-            set { AlertTime = DateTime.Now; }
-        }
+        public DateTime AlertTime { get; set; }
+            /*get { return AlertTime; }
+            set { AlertTime = DateTime.Now; }*/
+        
         // Red, Amber, or Green
         public string AlertColour { get; set; }
 
