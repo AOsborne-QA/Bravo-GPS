@@ -3,6 +3,7 @@
     public interface IRepositoryWrapper
     {  
         IVehicleRepository Vehicle { get; }
+        IAlertRepository Alert { get; }
         void Save();
     }
 }

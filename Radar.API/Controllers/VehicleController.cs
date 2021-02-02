@@ -84,8 +84,19 @@ namespace Radar.API.Controllers
             });
 
             Alert tAlert = AlertUtility.RetrieveTempAlert(newVehicle);
+            if (tAlert.AlertColour == "Red")
+            {
+                repository.Alert.Create(tAlert);
+                repository.Save();
+            } 
             await AlertUtility.SendAlert(tAlert);
             Alert hAlert = AlertUtility.RetrieveHumidityAlert(newVehicle);
+
+            if (hAlert.AlertColour == "Red")
+            {
+                repository.Alert.Create(hAlert);
+                repository.Save();
+            }
             await AlertUtility.SendAlert(hAlert);
 
             repository.Save();
