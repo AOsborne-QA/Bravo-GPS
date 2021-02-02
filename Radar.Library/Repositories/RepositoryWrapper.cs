@@ -28,7 +28,7 @@ namespace Radar.Library.Repositories
 
         public void Save()
         {
-            throw new NotImplementedException();
+            _repoContext.SaveChanges(); 
         }
     }
 }
