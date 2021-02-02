@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Logging;
+using Radar.Library.Interfaces;
+using Radar.Library.Models.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,30 +16,35 @@ namespace Radar.API.Controllers
     [ApiController]
     public class AlertController : ControllerBase
     {
-
+        private ILogger<AlertController> _logger;
+        private IRepositoryWrapper repository;
+        public AlertController(ILogger<AlertController> logger, IRepositoryWrapper repositoryWrapper)
+        {
+            _logger = logger;
+            repository = repositoryWrapper;
+        }
 
         // GET: api/<AlertController>
-        [HttpGet]
-        public async Task<IEnumerable<string>> Get()
+        [HttpGet("all")]
+        public IEnumerable<Alert> ViewAll()
         {
-             HubConnection hub = new HubConnectionBuilder().WithUrl("https://localhost:44383/alertHub").Build();
-            //This is for checking if the signal r works not permanent
+            var allAlerts = repository.Alert.FindAll();
 
-            try
+            if(allAlerts == null)
             {
-                //tries an initial connection
-                await hub.StartAsync();
-                //puts the message in the connection box
-
-            }
-            catch (Exception exc)
+                _logger.LogWarning("There are no alerts currently logged");
+                return null;
+            } else
             {
-                //puts the error message in the connection box if the connection fails
-
+                List<Alert> alerts = new List<Alert>();
+                foreach(var alert in allAlerts)
+                {
+                    alerts.Add(alert);
+                }
+                _logger.LogInformation("Vehicles found for tracking. Result returned.");
+                return alerts;
             }
-            await hub.InvokeAsync("SendAlert", "vechID", "Red", "Temperature", DateTime.Now);
             
-            return new string[] { "value1", "value2" };
         }
 
         // GET api/<AlertController>/5
