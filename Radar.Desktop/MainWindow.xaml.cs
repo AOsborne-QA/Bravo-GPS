@@ -30,7 +30,7 @@ namespace Radar.Desktop
         {
             InitializeComponent();
                 //this sets up the initial connection, need to pass in the URL
-            connection = new HubConnectionBuilder().WithUrl("SomeUrl").Build();
+            connection = new HubConnectionBuilder().WithUrl("https://localhost:44383/alertHub").Build();
 
             connection.Reconnecting += error =>
             {
@@ -48,7 +48,7 @@ namespace Radar.Desktop
                 return Task.CompletedTask;
             };
         }
-        private async void connectButton_Cllick(object sender, RoutedEventArgs e)
+        private async void connectButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -83,6 +83,7 @@ namespace Radar.Desktop
                     //picks up what colour the alert is, and then sets the specified alert to that colour
                 });
               });
+
         }
 
 

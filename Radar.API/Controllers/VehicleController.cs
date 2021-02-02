@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Radar.API.Hubs;
 using Radar.Library;
 using Radar.Library.Interfaces;
+using Radar.Library.Models.Binding;
 using Radar.Library.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR.Client;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,6 +19,7 @@ namespace Radar.API.Controllers
     [ApiController]
     public class VehicleController : ControllerBase
     {
+        private HubConnection hub;
         private ILogger<VehicleController> _logger;
         private IRepositoryWrapper repository;
 
@@ -23,6 +27,7 @@ namespace Radar.API.Controllers
         {
             _logger = logger;
             repository = repositoryWrapper;
+            hub =   new HubConnectionBuilder().WithUrl("https://localhost:44383/alertHub").Build();
         }
         // GET: api/<VehicleController>
 
@@ -30,6 +35,9 @@ namespace Radar.API.Controllers
         [HttpGet("status/all")]
         public IEnumerable<VehicleViewModel> AllVehicleStatuses()
         {
+            //This is for checking if the signal r works not permanent
+            hub.InvokeAsync("SendAlert", "vechID", "red", "temperature", DateTime.Now);
+
             var allVehicles = repository.Vehicle.FindAll();
             if (allVehicles == null)
             {
@@ -64,21 +72,59 @@ namespace Radar.API.Controllers
 
         // POST api/<VehicleController>
         [HttpPost("add")]
-        public ActionResult<Vehicle> Post([FromBody] AddVehicle addVehicle)
+        public ActionResult<Vehicle> AddVehicle([FromBody] AddVehicle addVehicle)
         {
-            addVehicle.
+            var newVehicle = repository.Vehicle.Create(new Vehicle
+            {
+                Location =
+                {
+                    Latitude = addVehicle.Location.Latitude,
+                    Longitude = addVehicle.Location.Longitude
+                },
+                VehicleHumidity = addVehicle.VehicleHumidity,
+                VehicleTemp = addVehicle.VehicleTemp
+            });
+            repository.Save();
+            _logger.LogInformation($"Vehicle has been successfully added with ID {newVehicle.VehicleID}.");
+            return newVehicle;
+
         }
+
 
         // PUT api/<VehicleController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("update/{id}")]
+        public ActionResult<Vehicle> UpdateVehicleStatus(Guid id, [FromBody] UpdateVehicle updateVehicle)
         {
+            var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
+            if (findVehicle == null)
+            {
+                _logger.LogError($"No vehicle with {id} has been found. Please recheck input.");
+                return NotFound($"No Vehicle with {id} has been found. Please recheck input.");
+            }
+            findVehicle.Location.Latitude = updateVehicle.Location.Latitude;
+            findVehicle.Location.Longitude = updateVehicle.Location.Longitude;
+            findVehicle.VehicleHumidity = updateVehicle.VehicleHumidity;
+            findVehicle.VehicleTemp = updateVehicle.VehicleTemp;
+            repository.Save();
+            _logger.LogInformation($"Vehicle id: {id} has updated information");
+            return Ok($"Vehicle id: {id} has updated information");
         }
 
-        // DELETE api/<VehicleController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+    // DELETE api/<VehicleController>/5
+    [HttpDelete("remove/{id}")]
+    public IActionResult RemoveVehicle(Guid id)
+    {
+            var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
+            if (findVehicle == null)
+            {
+                _logger.LogError($"No vehicle with {id} has been found. Please recheck input.");
+                return NotFound($"No Vehicle with {id} has been found. Please recheck input.");
+            }
+            _logger.LogInformation($"Removing vehicle id {id} from tracking.");
+            repository.Vehicle.Delete(findVehicle);
+            repository.Save();
+            _logger.LogInformation($"Vehicle with {id} is no longer tracked and has been removed.");
+            return Ok($"Vehicle with {id} is no longer tracked and has been removed.");
         }
-    }
+}
 }
