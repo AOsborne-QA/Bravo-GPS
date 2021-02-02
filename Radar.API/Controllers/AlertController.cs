@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,28 @@ namespace Radar.API.Controllers
     [ApiController]
     public class AlertController : ControllerBase
     {
+
+
         // GET: api/<AlertController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IEnumerable<string>> Get()
         {
+             HubConnection hub = new HubConnectionBuilder().WithUrl("https://localhost:44383/alertHub").Build();
+            //This is for checking if the signal r works not permanent
+
+            try
+            {
+                //tries an initial connection
+                await hub.StartAsync();
+                //puts the message in the connection box
+
+            }
+            catch (Exception exc)
+            {
+                //puts the error message in the connection box if the connection fails
+
+            }
+            await hub.InvokeAsync("SendAlert", "vechID", "Red", "Temperature", DateTime.Now);
             return new string[] { "value1", "value2" };
         }
 

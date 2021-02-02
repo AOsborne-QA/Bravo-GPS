@@ -64,25 +64,25 @@ namespace Radar.Desktop
                 ConnectBox.Text =(exc.Message);
             }
             connection.On<string, string, string, DateTime>("RecieveAlert", (vehicleID, alertColour, alertType, timeStamp) =>
-              {
-                  this.Dispatcher.Invoke(() =>
-                  {
+            {
+                this.Dispatcher.Invoke(() =>
+                {
 
-                      if (alertColour == "Red")
-                      {
-                          if (alertType == "Temperature")
-                          {
-                              TemperatureAlert.Background = new LinearGradientBrush(Colors.Red, Colors.Crimson, 90);
-                          }
-                          if (alertType == "Humidity")
-                          {
-                              HumidityAlert.Background = new LinearGradientBrush(Colors.Red, Colors.Crimson, 90);
-                          }
-                      }
+                    if (alertColour == "Red")
+                    {
+                        if (alertType == "Temperature")
+                        {
+                            TemperatureAlert.Background = new LinearGradientBrush(Colors.Red, Colors.Crimson, 90);
+                        }
+                        if (alertType == "Humidity")
+                        {
+                            HumidityAlert.Background = new LinearGradientBrush(Colors.Red, Colors.Crimson, 90);
+                        }
+                    }
 
                     //picks up what colour the alert is, and then sets the specified alert to that colour
                 });
-              });
+            });
 
         }
 
