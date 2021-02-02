@@ -1,4 +1,5 @@
 ﻿using Radar.Library.Models.Entity;
+using Radar.Library.Models.Properties;
 
 namespace Radar.Library.Interfaces
 {
