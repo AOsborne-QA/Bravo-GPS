@@ -65,7 +65,7 @@ namespace Radar.API.Controllers
 
         // POST api/<VehicleController>
         [HttpPost("add")]
-        public ActionResult<Vehicle> Post([FromBody] AddVehicle addVehicle)
+        public ActionResult<Vehicle> AddVehicle([FromBody] AddVehicle addVehicle)
         {
             var newVehicle = repository.Vehicle.Create(new Vehicle
             {
@@ -86,7 +86,7 @@ namespace Radar.API.Controllers
 
         // PUT api/<VehicleController>/5
         [HttpPut("update/{id}")]
-        public ActionResult<Vehicle> Put(Guid id, [FromBody] UpdateVehicle updateVehicle)
+        public ActionResult<Vehicle> UpdateVehicleStatus(Guid id, [FromBody] UpdateVehicle updateVehicle)
         {
             var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
             if (findVehicle == null)
@@ -104,9 +104,20 @@ namespace Radar.API.Controllers
         }
 
     // DELETE api/<VehicleController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
+    [HttpDelete("remove/{id}")]
+    public IActionResult RemoveVehicle(Guid id)
     {
-    }
+            var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
+            if (findVehicle == null)
+            {
+                _logger.LogError($"No vehicle with {id} has been found. Please recheck input.");
+                return NotFound($"No Vehicle with {id} has been found. Please recheck input.");
+            }
+            _logger.LogInformation($"Removing vehicle id {id} from tracking.");
+            repository.Vehicle.Delete(findVehicle);
+            repository.Save();
+            _logger.LogInformation($"Vehicle with {id} is no longer tracked and has been removed.");
+            return Ok($"Vehicle with {id} is no longer tracked and has been removed.");
+        }
 }
 }
