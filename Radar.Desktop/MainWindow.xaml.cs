@@ -1,6 +1,7 @@
 ﻿
 
 using Microsoft.AspNetCore.SignalR.Client;
+using Radar.Library.Models.Entity;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -63,19 +64,46 @@ namespace Radar.Desktop
                 //puts the error message in the connection box if the connection fails
                 ConnectBox.Text =(exc.Message);
             }
-            connection.On<string, string, string, DateTime>("RecieveAlert", (vehicleID, alertColour, alertType, timeStamp) =>
+            connection.On<Alert>("RecieveAlert", (alert) =>
             {
                 this.Dispatcher.Invoke(() =>
                 {
-                    if (alertColour == "Red")
+                    VehilceIDBox.Text = alert.VehicleID.ToString();
+                    HumidityBox.Text = alert.VehicleHumidity.ToString();
+                    TemperatureBox.Text = alert.VehicleTemp.ToString();
+                    LatitudeBox.Text = alert.Latitude.ToString();
+                    LongitudeBox.Text = alert.Longitude.ToString();
+                    if (alert.AlertColour == "Red")
                     {
-                        if (alertType == "Temperature")
+                        if (alert.AlertType == "Temperature")
                         {
-                            TemperatureAlert.Background = new LinearGradientBrush(Colors.Red, Colors.Crimson, 90);
+                            TemperatureLabel.Background = new LinearGradientBrush(Colors.Red, Colors.Crimson, 90);
                         }
-                        if (alertType == "Humidity")
+                        if (alert.AlertType == "Humidity")
                         {
-                            HumidityAlert.Background = new LinearGradientBrush(Colors.Red, Colors.Crimson, 90);
+                            HumidityLabel.Background = new LinearGradientBrush(Colors.Red, Colors.Crimson, 90);
+                        }
+                    }
+                    else if (alert.AlertColour == "Amber")
+                    {
+                        if (alert.AlertType == "Temperature")
+                        {
+                            TemperatureLabel.Background = new LinearGradientBrush(Colors.Orange, Colors.DarkOrange, 90);
+                        }
+                        if (alert.AlertType == "Humidity")
+                        {
+                            HumidityLabel.Background = new LinearGradientBrush(Colors.Orange, Colors.DarkOrange, 90);
+                        }
+                    }
+                    else if (alert.AlertColour == "Green")
+                    {
+                        if (alert.AlertType == "Temperature")
+                        {
+                            TemperatureLabel.Background = new LinearGradientBrush(Colors.Green, Colors.DarkGreen, 90);
+                        }
+                        if (alert.AlertType == "Humidity")
+                        {
+                            HumidityLabel.Background = new LinearGradientBrush(Colors.Green, Colors.DarkGreen, 90);
                         }
                     }
 
