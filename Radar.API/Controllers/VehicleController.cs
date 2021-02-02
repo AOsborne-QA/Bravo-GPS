@@ -66,8 +66,23 @@ namespace Radar.API.Controllers
         [HttpPost("add")]
         public ActionResult<Vehicle> Post([FromBody] AddVehicle addVehicle)
         {
-            addVehicle.
+            var newVehicle = repository.Vehicle.Create(new Vehicle
+            {
+                Location =
+                {
+                    Latitude = addVehicle.Location.Latitude,
+                    Longitude = addVehicle.Location.Longitude
+                },
+                VehicleHumidity = addVehicle.VehicleHumidity,
+                VehicleTemp = addVehicle.VehicleTemp
+            });
+
+            repository.Save();
+            _logger.LogInformation($"Vehicle has been successfully added with ID {newVehicle.VehicleID}.");
+            return newVehicle;
+        
         }
+
 
         // PUT api/<VehicleController>/5
         [HttpPut("{id}")]
