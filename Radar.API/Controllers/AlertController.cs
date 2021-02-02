@@ -35,6 +35,7 @@ namespace Radar.API.Controllers
 
             }
             await hub.InvokeAsync("SendAlert", "vechID", "Red", "Temperature", DateTime.Now);
+            
             return new string[] { "value1", "value2" };
         }
 

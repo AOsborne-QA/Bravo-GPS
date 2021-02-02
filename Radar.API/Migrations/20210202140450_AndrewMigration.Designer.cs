@@ -3,57 +3,23 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Radar.Library.Data;
 
 namespace Radar.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210202140450_AndrewMigration")]
+    partial class AndrewMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.2");
-
-            modelBuilder.Entity("Radar.Library.Models.Entity.Alert", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("AlertColour")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("AlertTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("AlertType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<float>("Latitude")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Longitude")
-                        .HasColumnType("real");
-
-                    b.Property<float>("VehicleHumidity")
-                        .HasColumnType("real");
-
-                    b.Property<Guid>("VehicleID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<float>("VehicleTemp")
-                        .HasColumnType("real");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Alerts");
-                });
 
             modelBuilder.Entity("Radar.Library.Vehicle", b =>
                 {

@@ -90,8 +90,25 @@ namespace Radar.API.Controllers
 
         // PUT api/<VehicleController>/5
         [HttpPut("update/{id}")]
-        public ActionResult<Vehicle> UpdateVehicleStatus(Guid id, [FromBody] UpdateVehicle updateVehicle)
+        public async Task<ActionResult<Vehicle>> UpdateVehicleStatus(Guid id, [FromBody] UpdateVehicle updateVehicle)
         {
+            //signalR Test
+            HubConnection hub = new HubConnectionBuilder().WithUrl("https://localhost:44383/alertHub").Build();
+            //This is for checking if the signal r works not permanent
+            try
+            {
+                //tries an initial connection
+                await hub.StartAsync();
+                //puts the message in the connection box
+
+            }
+            catch (Exception exc)
+            {
+                //puts the error message in the connection box if the connection fails
+
+            }
+            await hub.InvokeAsync("SendAlert", "vechID", "Red", "Temperature", DateTime.Now);
+
             var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
             if (findVehicle == null)
             {
