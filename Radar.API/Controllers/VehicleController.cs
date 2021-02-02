@@ -27,7 +27,7 @@ namespace Radar.API.Controllers
         // GET: api/<VehicleController>
 
         // Get vehicle
-        [HttpGet]
+        [HttpGet("status/all")]
         public IEnumerable<VehicleViewModel> AllVehicleStatuses()
         {
             var allVehicles = repository.Vehicle.FindAll();
@@ -43,13 +43,13 @@ namespace Radar.API.Controllers
                 {
                     vehicles.Add(new VehicleViewModel() { Vehicle = vehicle });
                 }
-                _logger.LogInformation("Vehicles found for tracking. Reult returned.");
+                _logger.LogInformation("Vehicles found for tracking. Result returned.");
                 return vehicles;
             }
         }
 
         // GET api/<VehicleController>/5
-        [HttpGet("{id}")]
+        [HttpGet("status/{id}")]
         public ActionResult<Vehicle> VehicleStatus(Guid id)
         {
             var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
@@ -63,9 +63,10 @@ namespace Radar.API.Controllers
         }
 
         // POST api/<VehicleController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("add")]
+        public ActionResult<Vehicle> Post([FromBody] AddVehicle addVehicle)
         {
+            addVehicle.
         }
 
         // PUT api/<VehicleController>/5
