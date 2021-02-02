@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Radar.Library;
 using Radar.Library.Interfaces;
+using Radar.Library.Models.Binding;
 using Radar.Library.Models.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -76,24 +77,36 @@ namespace Radar.API.Controllers
                 VehicleHumidity = addVehicle.VehicleHumidity,
                 VehicleTemp = addVehicle.VehicleTemp
             });
-
             repository.Save();
             _logger.LogInformation($"Vehicle has been successfully added with ID {newVehicle.VehicleID}.");
             return newVehicle;
-        
+
         }
 
 
         // PUT api/<VehicleController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("update/{id}")]
+        public ActionResult<Vehicle> Put(Guid id, [FromBody] UpdateVehicle updateVehicle)
         {
+            var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
+            if (findVehicle == null)
+            {
+                _logger.LogError($"No vehicle with {id} has been found. Please recheck input.");
+                return NotFound($"No Vehicle with {id} has been found. Please recheck input.");
+            }
+            findVehicle.Location.Latitude = updateVehicle.Location.Latitude;
+            findVehicle.Location.Longitude = updateVehicle.Location.Longitude;
+            findVehicle.VehicleHumidity = updateVehicle.VehicleHumidity;
+            findVehicle.VehicleTemp = updateVehicle.VehicleTemp;
+            repository.Save();
+            _logger.LogInformation($"Vehicle id: {id} has updated information");
+            return Ok($"Vehicle id: {id} has updated information");
         }
 
-        // DELETE api/<VehicleController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+    // DELETE api/<VehicleController>/5
+    [HttpDelete("{id}")]
+    public void Delete(int id)
+    {
     }
+}
 }
