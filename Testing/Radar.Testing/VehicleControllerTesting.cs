@@ -1,11 +1,14 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Radar.API.Controllers;
 using Radar.Library;
 using Radar.Library.Interfaces;
 using Radar.Library.Models.Binding;
+using Radar.Library.Models.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Radar.Testing
@@ -47,42 +50,50 @@ namespace Radar.Testing
             //controller setup
             _logger = new Mock<ILogger<VehicleController>>();
             repoMock = new Mock<IRepositoryWrapper>();
-            //var allVehicles = GetAll();            
-        }
-        /*private IEnumerable<Vehicle> GetVehicles()
-        {
-            var vehicles=new List<Vehicle>
-            {
-                //new Vehicle(){VehicleID=}
-            }
-        }*/
+            var allVehicles = GetVehicles();
+            vehicleController = new VehicleController(_logger.Object, repoMock.Object);
 
-        [Fact]
+
+        }
+        private IEnumerable<Vehicle> GetVehicles()
+        {
+            var vehicles = new List<Vehicle>
+            {
+                new Vehicle(){VehicleID=Guid.NewGuid(),Latitude=10,Longitude=10,VehicleHumidity=10,VehicleTemp=10},
+                new Vehicle(){VehicleID=Guid.NewGuid(),Latitude=20,Longitude=30,VehicleHumidity=30,VehicleTemp=15}
+            };
+            return vehicles;
+        }
+        private Vehicle GetVehicle()
+        {
+            return GetVehicles().ToList()[0];
+        }
+            [Fact]
         public void GetAllVehicles_Test()
         {
-
+            //Arrange
+            repoMock.Setup(repo => repo.Vehicle.FindAll()).Returns(GetVehicles());
+            //Action
+            var controllerActionResult = vehicleController.AllVehicleStatuses();
+            //Assert
+            Assert.NotNull(controllerActionResult);
         }
-        /* public void GetAllCourses_Test()
-         {
-             //Arrange
-             mockRepo.Setup(repo => repo.Courses.FindAll()).Returns(GetCourses());
-             mockRepo.Setup(repo => repo.Registrations.FindByCondition(r => r.CourseId == It.IsAny<int>())).Returns(GetRegistrations());
-             //Act
-             var controllerActionResult = courseController.Get();
-             //Assert
-             Assert.NotNull(controllerActionResult);
-         }
-        private IEnumerable<Course> GetCourses()
-         {
-             var courses = new List<Course> {
-             new Course(){Id=1, Code="CS101", Title="Computing Basics"},
-             new Course(){Id=1, Code="CS102", Title="Computing Intermediate"}
-             };
-             return courses;
-         }
-         private Course GetCourse()
-         {
-             return GetCourses().ToList()[0];
-         }*/
+
+        /*[Fact]
+        public void AddVehicle_Test()
+        {
+            //Arrange
+            repoMock.Setup(repo => repo.Vehicle.FindByCondition(c => c.VehicleID == It.IsAny<Guid>())).Returns(GetVehicles());
+            //Action
+            var controllerActionResult = vehicleController.AddVehicle(addVehicle);
+            //Assert
+            Assert.NotNull(controllerActionResult);
+            Assert.IsType<ActionResult<VehicleViewModel>>(controllerActionResult);
+        }*/
+
+
+
+        
+
     }
 }
