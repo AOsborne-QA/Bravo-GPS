@@ -15,13 +15,18 @@ namespace Radar.Library.Utility
         {
             Alert Alert = new Alert() {
                 VehicleID = y.VehicleID,
-                AlertTime = DateTime.Now
+                AlertTime = DateTime.Now,
+                AlertType = "Humidity",
+                VehicleHumidity =y.VehicleHumidity,
+                VehicleTemp =y.VehicleTemp,
+                Longitude =y.Longitude,
+                Latitude =y.Latitude
             };
             if (y.VehicleHumidity > 60 || y.VehicleHumidity < 20)
             {
                 // (Humidity) Alert is set to red
                 Alert.AlertColour="Red";
-                Alert.AlertType = "Humidity";
+
 
                 //Some method to send a red alert
             }
@@ -30,7 +35,7 @@ namespace Radar.Library.Utility
             {
                 // (Humidity) Alert is set to amber
                 Alert.AlertColour ="Amber";
-                Alert.AlertType = "Humidity";
+
             }
             else
             {
@@ -45,13 +50,17 @@ namespace Radar.Library.Utility
             TempAlert tempAlert = new TempAlert()
             {
                 VehicleID = x.VehicleID,
-                AlertTime = DateTime.Now
+                AlertTime = DateTime.Now,
+                AlertType = "Temperature",
+                VehicleHumidity = x.VehicleHumidity,
+                VehicleTemp = x.VehicleTemp,
+                Longitude = x.Longitude,
+                Latitude = x.Latitude
             };
             if (x.VehicleTemp > 25 || x.VehicleTemp < -60)
             {
                 // (Temp) Alert is set to red
                 tempAlert.AlertColour = "Red";
-                tempAlert.AlertType = "Temperature";
             }
             else if ((x.VehicleTemp >= -60 && x.VehicleTemp <= -15)
                 || (x.VehicleTemp >= 16 && x.VehicleTemp <= 25))
@@ -78,7 +87,7 @@ namespace Radar.Library.Utility
             {
                 return exc.Message;
             }
-            await hub.InvokeAsync("SendAlert", alert.VehicleID, alert.AlertColour, alert.AlertType, alert.AlertTime);
+            await hub.InvokeAsync("SendAlert", alert);
             return ($"A {alert.AlertColour} {alert.AlertType} has been sent");   
         }
 
