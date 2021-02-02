@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Radar.Testing
 {
-    public class UnitTest1
+    public class VehicleControllerTest
     {
         [Fact]
         public void Test1()
