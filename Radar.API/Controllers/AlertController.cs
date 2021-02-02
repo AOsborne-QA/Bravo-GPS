@@ -58,6 +58,7 @@ namespace Radar.API.Controllers
         [HttpPost]
         public void Post([FromBody] string value)
         {
+
         }
 
         // PUT api/<AlertController>/5

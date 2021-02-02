@@ -24,11 +24,13 @@ namespace Radar.API.Controllers
 
         private ILogger<VehicleController> _logger;
         private IRepositoryWrapper repository;
+        private AlertUtility alertU;
 
         public VehicleController(ILogger<VehicleController> logger, IRepositoryWrapper repositoryWrapper)
         {
             _logger = logger;
             repository = repositoryWrapper;
+            alertU = new AlertUtility(repositoryWrapper);
 
         }
         // GET: api/<VehicleController>
@@ -83,22 +85,7 @@ namespace Radar.API.Controllers
                 VehicleTemp = addVehicle.VehicleTemp
             });
 
-            Alert tAlert = AlertUtility.RetrieveTempAlert(newVehicle);
-            if (tAlert.AlertColour == "Red")
-            {
-                repository.Alert.Create(tAlert);
-                repository.Save();
-            } 
-            await AlertUtility.SendAlert(tAlert);
-            Alert hAlert = AlertUtility.RetrieveHumidityAlert(newVehicle);
-
-            if (hAlert.AlertColour == "Red")
-            {
-                repository.Alert.Create(hAlert);
-                repository.Save();
-            }
-            await AlertUtility.SendAlert(hAlert);
-
+            await alertU.PassAlert(newVehicle);
             repository.Save();
             _logger.LogInformation($"Vehicle has been successfully added with ID {newVehicle.VehicleID}.");
             return newVehicle;
@@ -121,6 +108,7 @@ namespace Radar.API.Controllers
             findVehicle.Longitude = updateVehicle.Longitude;
             findVehicle.VehicleHumidity = updateVehicle.VehicleHumidity;
             findVehicle.VehicleTemp = updateVehicle.VehicleTemp;
+            await alertU.PassAlert(findVehicle);
             repository.Save();
             _logger.LogInformation($"Vehicle id: {id} has updated information");
             return Ok($"Vehicle id: {id} has updated information");
