@@ -67,7 +67,6 @@ namespace Radar.Desktop
             {
                 this.Dispatcher.Invoke(() =>
                 {
-
                     if (alertColour == "Red")
                     {
                         if (alertType == "Temperature")
