@@ -2,13 +2,13 @@ Test Coverage: 70%
 
 # Vehicle Perfomance Monitoring Desktop Application
 
-This project is a perfomance monitoring application for a group of ground vehicles where GPS, temperature, and humidity is monitored and tracked in real time.
+This project is for a perfomance monitoring application that tracks a group of ground vehicles where GPS, temperature, and humidity is monitored and tracked in real time.
 
 ## Getting Started
 To get started on your own machine fork the project onto your own repository, then use the command git clone, followed by the url of the forked repository. This will get the project onto your own machine for development, testing, and usage purposes.
 
 ### Prerequisites
-The software required to run this project is as follows:
+The tech/frameworks used to run this project are as follows:
 
 [ASP.NET](https://dotnet.microsoft.com/apps/aspnet) An open source framework for building modern web apps and services with .NET
 
@@ -17,6 +17,10 @@ The software required to run this project is as follows:
 [WPF](https://visualstudio.microsoft.com/vs/features/wpf/) a free and open source graphical subsystem for rendering user interfaced in Windows based applications.
 
 [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/) An Integrated Development environment which is recommended.
+
+## Code Example 
+
+## Code Style
 
 ### Installing
 
