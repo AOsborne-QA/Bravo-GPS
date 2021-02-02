@@ -10,16 +10,16 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Margin ="4" VerticalAlignment="Center">
             <Button Name="ConnectButton" Content="Connect" Click="connectButton_Click"/>
+            
             <TextBox Name ="ConnectBox"/>
             <Label Content="Vehicle ID"/>
             <TextBox Name="VehilceIDBox"/>
-            <Label Content="Humidity"/>
+            <Label Content="Humidity" Name="HumidityLabel"/>
             <TextBox Name="HumidityBox"/>
-            <Label Content="Temperature"/>
+            <Label Content="Temperature" Name="TemperatureLabel"/>
             <TextBox Name="TemperatureBox"/>
             <Label Content="Latitude"/>
             <TextBox Name="LatitudeBox"/>
@@ -27,13 +27,9 @@
             <TextBox Name="LongitudeBox"/>
         </StackPanel>
 
-        <StackPanel Grid.Column="1" VerticalAlignment="Center">
-            <Label Name="HumidityAlert" Content="Humidity Alert"/>
-            <TextBox Name="HumidityAlertText"/>
-            <Label Name="TemperatureAlert" Content ="Temperature Alert"/>
-            <TextBox Name="TemperatureAlertText"/>
+
             
-        </StackPanel>
+ 
 
     </Grid>
 </Window>
