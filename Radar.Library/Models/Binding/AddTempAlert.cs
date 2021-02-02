@@ -8,10 +8,7 @@ namespace Radar.Library
 {
     public class AddTempAlert
     {
-        
         public string VehicleTemp { get; set; }
-
     }
-
     
 }
