@@ -113,7 +113,8 @@ namespace Radar.API.Controllers
             await alertU.PassAlert(findVehicle);
             repository.Save();
             _logger.LogInformation($"Vehicle id: {id} has updated information");
-            return Ok($"Vehicle id: {id} has updated information");
+            
+            return new VehicleViewModel { Vehicle = findVehicle };
         }
 
     // DELETE api/<VehicleController>/5
