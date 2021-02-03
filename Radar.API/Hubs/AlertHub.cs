@@ -20,21 +20,28 @@ namespace Radar.API.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        //This defines a method that can be called by the API (i think for now that's how it will work)
+        //This defines a method that can be called by the API
         public async Task SendAlert(Alert alert)
         {
             await Clients.All.SendAsync("RecieveAlert", alert);
         }
         
-        //This sends message to client to run AllAlerts
+       /* -----To be used for future implementation between desktop and client---------
         public async Task GetAlerts(Guid clientId)
         {
-            await Clients.Client("Server").SendAsync("AllAlerts", clientId);
+            await Clients.Groups("Server").SendAsync("AllAlerts", clientId);
         }
 
         public async Task SendAllAlert(Guid clientId, List<Alert> alerts)
         {
             await Clients.Client(clientId.ToString()).SendAsync("ReceiveAllAlerts", alerts);
         }
+
+        public async Task JoinGroup(string group)
+        {
+            await Groups.AddToGroupAsync(this.Context.ConnectionId, "group");
+        }*/
+
+        
     }
 }

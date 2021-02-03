@@ -5,10 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Radar.Desktop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Alerts Tracker" Height="400" Width="400">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Margin ="4" VerticalAlignment="Center">
@@ -25,11 +24,8 @@
             <TextBox Name="LatitudeBox"/>
             <Label Content="Longitude"/>
             <TextBox Name="LongitudeBox"/>
-        </StackPanel>
-        <StackPanel Grid.Column="1">
-            <Label Content="Passed Alert" />
-            <ListBox Grid.Column="1" Name="AlertList" />
-            
+            <Label Content="TimeStamp"/>
+            <TextBox Name="TimeStampBox"/>
         </StackPanel>
 
 
