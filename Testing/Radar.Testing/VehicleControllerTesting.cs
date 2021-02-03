@@ -88,14 +88,14 @@ namespace Radar.Testing
         [Fact]
         public void GetVehicleStatus_Test()
         {
-            // Arrrange Test
+            // Arrrange
             var vehicleId = GetVehicle().VehicleID;
             repoMock.Setup(repo => repo.Vehicle.FindByCondition(v => v.VehicleID == vehicleId)).Returns(GetVehicles());
-
-            // Action Test
+            
+            // Action
             var ControllerActionResult = vehicleController.VehicleStatus(vehicleId);
 
-            // Assert Results
+            // Assert
             Assert.NotNull(ControllerActionResult);
             Assert.IsType<ActionResult<VehicleViewModel>>(ControllerActionResult);
         }
@@ -113,28 +113,25 @@ namespace Radar.Testing
         [Fact]
         public void UpdateVehicle_Test()
         {
-            // Setup Test
+            // Arrage
             repoMock.Setup(repo => repo.Vehicle.FindByCondition(v => v.VehicleID == It.IsAny<Guid>())).Returns(GetVehicles());
             repoMock.Setup(repo => repo.Vehicle.Update(GetVehicle())).Returns(vehicle);
 
-            // Act on Test
+            // Action
 
             var ControllerActionResult = vehicleController.UpdateVehicleStatus(GetVehicle().VehicleID, updateVehicle);
         
 
-            // Assert Test Results
+            // Assert
             Assert.NotNull(ControllerActionResult);
             Assert.IsType<Task<ActionResult<VehicleViewModel>>>(ControllerActionResult);
-
-            /*Assert.IsType<ActionResult<VehicleViewModel>>(vehicleControllerActionResult);*/
-            //Assert.IsType<string>(vehicleControllerActionResult);
         }
 
 
         [Fact]
         public void RemoveVehicle_Test()
         {
-            //Arrange Test
+            //Arrange
             var vehicleToDelete = GetVehicle();
             repoMock.Setup(repo => repo.Vehicle.FindByCondition(v => v.VehicleID == vehicleToDelete.VehicleID)).Returns(GetVehicles());
             repoMock.Setup(repo => repo.Vehicle.Delete(vehicleToDelete));
@@ -142,7 +139,7 @@ namespace Radar.Testing
             //Act
             var ControllerActionResult = vehicleController.RemoveVehicle(GetVehicle().VehicleID);
 
-            //Assert Test
+            //Assert
             
             Assert.NotNull(ControllerActionResult);
             var newLength = GetVehicles().ToList().Count;
