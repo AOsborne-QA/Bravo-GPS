@@ -31,6 +31,21 @@ The project set up its database using the Object Relational Mapper (ORM) which a
 
 ## Running Tests
 
+# Unit Tests
+
+'''
+public void GetAllVehicles_Test()
+        {
+            //Arrange
+            repoMock.Setup(repo => repo.Vehicle.FindAll()).Returns(GetVehicles());
+            //Action
+            var controllerActionResult = vehicleController.AllVehicleStatuses();
+            //Assert
+            Assert.NotNull(controllerActionResult);
+'''
+
+# Mock Tests
+
 
 
 ## Built With
