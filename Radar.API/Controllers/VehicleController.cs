@@ -36,25 +36,16 @@ namespace Radar.API.Controllers
         [HttpGet("status/all")]
         public IEnumerable<VehicleViewModel> AllVehicleStatuses()
         {
-            try
+            var allVehicles = repository.Vehicle.FindAll();
+
+            List<VehicleViewModel> vehicleViewModels = new List<VehicleViewModel>();
+            foreach (var vehicle in allVehicles)
             {
-                var allVehicles = repository.Vehicle.FindAll();
-
-                List<VehicleViewModel> vehicleViewModels = new List<VehicleViewModel>();
-                foreach (var vehicle in allVehicles)
-                {
-                    vehicleViewModels.Add(new VehicleViewModel() { Vehicle = vehicle });
-                }
-                _logger.LogInformation("Vehicles found for tracking. Result returned.");
-                return vehicleViewModels;
-
+                vehicleViewModels.Add(new VehicleViewModel() { Vehicle = vehicle });
             }
-            catch
-            {
-                _logger.LogWarning("There are no vehicles currently logged");
-                return null;
+            _logger.LogInformation("Vehicles found for tracking. Result returned.");
+            return vehicleViewModels;
 
-            }
 
         }
 

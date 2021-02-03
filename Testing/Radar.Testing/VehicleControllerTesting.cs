@@ -48,7 +48,7 @@ namespace Radar.Testing
             //sample models
             addVehicle = new AddVehicle { Latitude = 10, Longitude = 10, VehicleHumidity = 10, VehicleTemp = 10 };
             updateVehicle = new UpdateVehicle { Latitude = 999, Longitude = 999, VehicleHumidity = 60, VehicleTemp = 80 };
-
+            
             //controller setup
             _logger = new Mock<ILogger<VehicleController>>();
             repoMock = new Mock<IRepositoryWrapper>();
@@ -57,6 +57,7 @@ namespace Radar.Testing
             var onevehicle = GetVehicle();
             vehicleController = new VehicleController(_logger.Object, repoMock.Object);
 
+           
 
         }
         private IEnumerable<Vehicle> GetVehicles()
@@ -82,85 +83,67 @@ namespace Radar.Testing
             //Assert
             Assert.NotNull(controllerActionResult);
         }
-        /*[Fact]
-        public void GetVehicle_Test()
-        {
-            //Arrange
-            repoMock.Setup(repo => repo.Vehicle.FindByCondition(c => c.VehicleID == It.IsAny<Guid>())).Returns(GetVehicles());
-            //Action
-            var controllerActionResult = vehicleController.VehicleStatus(It.IsAny<Guid>());
-            //Assert
-            Assert.NotNull(controllerActionResult);
-        }*/
 
+    
         [Fact]
-        public async void AddVehicle_Test()
+        public void GetVehicleStatus_Test()
         {
-            //Arrange
-           /* repoMock.Setup(repo => repo.Vehicle.FindByCondition(
-                c => c.VehicleID == It.IsAny<Guid>())).*/
-                //Returns(GetVehicles());
-            repoMock.Setup(repo => repo.Vehicle.Create(vehicle)).Returns(vehicle);
+            // Arrrange
+            var vehicleId = GetVehicle().VehicleID;
+            repoMock.Setup(repo => repo.Vehicle.FindByCondition(v => v.VehicleID == vehicleId)).Returns(GetVehicles());
+            
+            // Action
+            var ControllerActionResult = vehicleController.VehicleStatus(vehicleId);
 
-            //Action
-            var controllerActionResult = await vehicleController.AddVehicle(addVehicle);
-            //Assert
-            Assert.NotNull(controllerActionResult);
-            Assert.IsType<ActionResult<Vehicle>>(controllerActionResult);
+            // Assert
+            Assert.NotNull(ControllerActionResult);
+            Assert.IsType<ActionResult<VehicleViewModel>>(ControllerActionResult);
         }
-        /*// Arrange
-        var mockRepo = new Mock<IBrainstormSessionRepository>();
-        mockRepo.Setup(repo => repo.AddAsync(It.IsAny<BrainstormSession>()))
-        .Returns(Task.CompletedTask)
-        .Verifiable();
-        var controller = new HomeController(mockRepo.Object);
-        var newSession = new HomeController.NewSessionModel()
+
+      [Fact]
+      public void AddVehicle_Test()
         {
-            SessionName = "Test Name"
-        };
+            repoMock.Setup(v => v.Vehicle.Create(vehicle)).Returns(vehicle);
+            var ControllerActionResult = vehicleController.AddVehicle(addVehicle);
 
-        // Act
-        var result = await controller.Index(newSession);
-
-        // Assert
-        var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-        Assert.Null(redirectToActionResult.ControllerName);
-    Assert.Equal("Index", redirectToActionResult.ActionName);*/
-    //mockRepo.Verify();
-
+            Assert.NotNull(ControllerActionResult);
+            Assert.IsType<Task<ActionResult<VehicleViewModel>>>(ControllerActionResult);
+        }
+        
         [Fact]
         public void UpdateVehicle_Test()
         {
-            // Setup Test
+            // Arrage
             repoMock.Setup(repo => repo.Vehicle.FindByCondition(v => v.VehicleID == It.IsAny<Guid>())).Returns(GetVehicles());
             repoMock.Setup(repo => repo.Vehicle.Update(GetVehicle())).Returns(vehicle);
 
-            // Act on Test
+            // Action
 
-            var vehicleControllerActionResult = vehicleController.UpdateVehicleStatus(GetVehicle().VehicleID, updateVehicle);
+            var ControllerActionResult = vehicleController.UpdateVehicleStatus(GetVehicle().VehicleID, updateVehicle);
+        
 
-            // Assert Test Results
-            Assert.NotNull(vehicleControllerActionResult);
-            /*Assert.IsType<ActionResult<VehicleViewModel>>(vehicleControllerActionResult);*/
-            //Assert.IsType<string>(vehicleControllerActionResult);
+            // Assert
+            Assert.NotNull(ControllerActionResult);
+            Assert.IsType<Task<ActionResult<VehicleViewModel>>>(ControllerActionResult);
         }
 
 
         [Fact]
         public void RemoveVehicle_Test()
         {
-            //Arrange Test
+            //Arrange
             var vehicleToDelete = GetVehicle();
             repoMock.Setup(repo => repo.Vehicle.FindByCondition(v => v.VehicleID == vehicleToDelete.VehicleID)).Returns(GetVehicles());
             repoMock.Setup(repo => repo.Vehicle.Delete(vehicleToDelete));
 
             //Act
-            var vehicleControllerActionResult = vehicleController.RemoveVehicle(GetVehicle().VehicleID);
+            var ControllerActionResult = vehicleController.RemoveVehicle(GetVehicle().VehicleID);
 
-            //Assert Test
+            //Assert
             
-            Assert.NotNull(vehicleControllerActionResult);
+            Assert.NotNull(ControllerActionResult);
             var newLength = GetVehicles().ToList().Count;
+            Assert.IsType<OkObjectResult>(ControllerActionResult);
 
         }
 
