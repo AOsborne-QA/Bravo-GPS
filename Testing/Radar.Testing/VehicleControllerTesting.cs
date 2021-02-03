@@ -129,6 +129,18 @@ namespace Radar.Testing
     //mockRepo.Verify();
 
 
+        [Fact]
+        public void RemoveVehicle_Test()
+        {
+            //Arrange Test
+            repoMock.Setup(repo => repo.Vehicle.FindByCondition(v => v.VehicleID == It.IsAny<Guid>())).Returns(GetVehicles());
+            repoMock.Setup(repo => repo.Vehicle.Delete(GetVehicle()));
+            //Act
+            var vehicleControllerActionResult = vehicleController.RemoveVehicle(It.IsAny<Guid>());
+            //Assert Test
+            Assert.NotNull(vehicleControllerActionResult);
+        }
+
 
         
 
