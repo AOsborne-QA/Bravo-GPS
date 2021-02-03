@@ -9,6 +9,7 @@ using Radar.Library.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Radar.Testing
@@ -28,6 +29,7 @@ namespace Radar.Testing
         private Mock<IUpdateVehicle> updateVehicleMock;
         private Mock<IVehicleViewModel> vehicleViewModelMock;
         private List<IVehicleViewModel> vehiclesViewModelMock;
+        private Mock<IAlert> alertMock;
         
         public VehicleControllerTesting()
         {
@@ -50,7 +52,9 @@ namespace Radar.Testing
             //controller setup
             _logger = new Mock<ILogger<VehicleController>>();
             repoMock = new Mock<IRepositoryWrapper>();
+            alertMock = new Mock<IAlert>();
             var allVehicles = GetVehicles();
+            var onevehicle = GetVehicle();
             vehicleController = new VehicleController(_logger.Object, repoMock.Object);
 
 
@@ -78,18 +82,49 @@ namespace Radar.Testing
             //Assert
             Assert.NotNull(controllerActionResult);
         }
+        //[Fact]
+        /*public void GetVehicle_Test()
+        {
+            //Arrange
+            repoMock.Setup(repo => repo.Vehicle.FindByCondition(c => c.VehicleID == It.IsAny<Guid>())).Returns((IEnumerable<Vehicle>)GetVehicle());
+            //Action
+            var controllerActionResult = vehicleController.VehicleStatus(It.IsAny<Guid>());
+            //Assert
+            Assert.NotNull(controllerActionResult);
+        }*/
 
-        /*[Fact]
+        [Fact]
         public void AddVehicle_Test()
         {
             //Arrange
-            repoMock.Setup(repo => repo.Vehicle.FindByCondition(c => c.VehicleID == It.IsAny<Guid>())).Returns(GetVehicles());
+            repoMock.Setup(repo => repo.Vehicle.FindByCondition(
+                c => c.VehicleID == It.IsAny<Guid>())).
+                Returns(GetVehicles());
             //Action
             var controllerActionResult = vehicleController.AddVehicle(addVehicle);
             //Assert
             Assert.NotNull(controllerActionResult);
-            Assert.IsType<ActionResult<VehicleViewModel>>(controllerActionResult);
-        }*/
+            Assert.IsType<Task<ActionResult<Vehicle>>>(controllerActionResult);
+        }
+        /*// Arrange
+        var mockRepo = new Mock<IBrainstormSessionRepository>();
+        mockRepo.Setup(repo => repo.AddAsync(It.IsAny<BrainstormSession>()))
+        .Returns(Task.CompletedTask)
+        .Verifiable();
+        var controller = new HomeController(mockRepo.Object);
+        var newSession = new HomeController.NewSessionModel()
+        {
+            SessionName = "Test Name"
+        };
+
+        // Act
+        var result = await controller.Index(newSession);
+
+        // Assert
+        var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+        Assert.Null(redirectToActionResult.ControllerName);
+    Assert.Equal("Index", redirectToActionResult.ActionName);*/
+    //mockRepo.Verify();
 
 
 
