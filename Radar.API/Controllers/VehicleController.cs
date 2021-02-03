@@ -117,6 +117,7 @@ namespace Radar.API.Controllers
                 _logger.LogError($"No vehicle with {id} has been found. Please recheck input.");
                 return NotFound($"No Vehicle with {id} has been found. Please recheck input.");
             }
+            repository.Vehicle.Update(findVehicle);
             findVehicle.Latitude = updateVehicle.Latitude;
             findVehicle.Longitude = updateVehicle.Longitude;
             findVehicle.VehicleHumidity = updateVehicle.VehicleHumidity;
