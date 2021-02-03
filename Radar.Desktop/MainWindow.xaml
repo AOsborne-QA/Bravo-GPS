@@ -5,15 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Radar.Desktop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Alerts Tracker" Height="400" Width="1200">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Margin ="4" VerticalAlignment="Center">
+        <StackPanel Margin ="10" VerticalAlignment="Top" Grid.Column="0">
             <Button Name="ConnectButton" Content="Connect" Click="connectButton_Click"/>
-
             <TextBox Name ="ConnectBox"/>
             <Label Content="Vehicle ID"/>
             <TextBox Name="VehilceIDBox"/>
@@ -25,7 +26,41 @@
             <TextBox Name="LatitudeBox"/>
             <Label Content="Longitude"/>
             <TextBox Name="LongitudeBox"/>
+            <Label Content="TimeStamp"/>
+            <TextBox Name="TimeStampBox"/>
         </StackPanel>
+
+        <StackPanel Margin ="10" VerticalAlignment="Top" Grid.Column="1">
+            <Button Name="GetButton" Content="Get Vehicle" Click="GetButton_Click"/>
+            <Border Margin="8"/>
+            <Label Content="Vehicle ID"/>
+            <TextBox Name ="GetIdBox"/>
+            <Label Content="Humidity" Name="GetHumidityLabel"/>
+            <TextBox Name="GetHumidityBox"/>
+            <Label Content="Temperature" Name="GetTemperatureLabel"/>
+            <TextBox Name="GetTemperatureBox"/>
+            <Label Content="Latitude"/>
+            <TextBox Name="GetLatitudeBox"/>
+            <Label Content="Longitude"/>
+            <TextBox Name="GetLongitudeBox"/>
+        </StackPanel>
+        <Button Name="GetAllButton" VerticalAlignment="Top" Content="Get All Vehicles" Click="GetAllButton_Click" Grid.Column="2"/>
+        <ListBox Margin ="10,25,10,10"  Grid.Column="2"
+                Name="GetAllBox" 
+                ItemsSource="{Binding}" 
+                ScrollViewer.VerticalScrollBarVisibility="Visible"/>
+
+        <StackPanel Margin ="10" VerticalAlignment="Top" Grid.Column="3">
+            <Button Name="UpdateButton" Content="Update Sensors" Click="UpdateButton_Click"/>
+            <Border Margin="8"/>
+            <Label Content="Vehicle ID"/>
+            <TextBox Name ="UpdateIDBox"/>
+            <Label Content="Humidity" />
+            <TextBox Name="UpdateHumidityBox"/>
+            <Label Content="Temperature"/>
+            <TextBox Name="UpdateTemperatureBox"/>
+        </StackPanel>
+
 
 
     </Grid>

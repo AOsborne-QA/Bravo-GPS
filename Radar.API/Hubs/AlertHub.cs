@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Radar.Library.Models.Entity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Radar.API.Hubs
@@ -14,13 +12,13 @@ namespace Radar.API.Hubs
         {
             await base.OnConnectedAsync();
         }
-        //THis calls the methods that work when the client is disconnected from the hub
+        //This calls the methods that work when the client is disconnected from the hub
         public async override Task OnDisconnectedAsync(Exception exception)
         {
             await base.OnDisconnectedAsync(exception);
         }
 
-        //This defines a method that can be called by the API (i think for now that's how it will work)
+        //This defines a method that can be called by the API
         public async Task SendAlert(Alert alert)
         {
             await Clients.All.SendAsync("RecieveAlert", alert);
