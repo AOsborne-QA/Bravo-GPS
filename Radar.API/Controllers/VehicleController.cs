@@ -49,19 +49,19 @@ namespace Radar.API.Controllers
             }
             else
             {
-                List<VehicleViewModel> vehicles = new List<VehicleViewModel>();
+                List<VehicleViewModel> vehicleViewModels = new List<VehicleViewModel>();
                 foreach (var vehicle in allVehicles)
                 {
-                    vehicles.Add(new VehicleViewModel() { Vehicle = vehicle });
+                    vehicleViewModels.Add(new VehicleViewModel() { Vehicle = vehicle });
                 }
                 _logger.LogInformation("Vehicles found for tracking. Result returned.");
-                return vehicles;
+                return vehicleViewModels;
             }
         }
 
         // GET api/<VehicleController>/5
         [HttpGet("status/{id}")]
-        public ActionResult<Vehicle> VehicleStatus(Guid id)
+        public ActionResult<VehicleViewModel> VehicleStatus(Guid id)
         {
             var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
             if (findVehicle == null)
@@ -69,13 +69,14 @@ namespace Radar.API.Controllers
                 _logger.LogWarning("No vehicle with this ID has been found. Please recheck ID entered");
                 return NotFound($"Vehicle with ID of {id} was not found. Please recheck ID entered");
             }
+            var locatedVehicleViewModel = new VehicleViewModel { Vehicle = findVehicle };
             _logger.LogInformation($"Vehicle with id {id} has been located and information outputted");
-            return findVehicle;
+            return locatedVehicleViewModel;
         }
 
         // POST api/<VehicleController>
         [HttpPost("add")]
-        public async Task<ActionResult<Vehicle>> AddVehicle([FromBody] AddVehicle addVehicle)
+        public async Task<ActionResult<VehicleViewModel>> AddVehicle([FromBody] AddVehicle addVehicle)
         {
             var newVehicle = repository.Vehicle.Create(new Vehicle
             {
@@ -88,14 +89,14 @@ namespace Radar.API.Controllers
             await alertU.PassAlert(newVehicle);
             repository.Save();
             _logger.LogInformation($"Vehicle has been successfully added with ID {newVehicle.VehicleID}.");
-            return newVehicle;
+            return new VehicleViewModel { Vehicle = newVehicle };
 
         }
 
 
         // PUT api/<VehicleController>/5
         [HttpPut("update/{id}")]
-        public async Task<ActionResult<Vehicle>> UpdateVehicleStatus(Guid id, [FromBody] UpdateVehicle updateVehicle)
+        public async Task<ActionResult<VehicleViewModel>> UpdateVehicleStatus(Guid id, [FromBody] UpdateVehicle updateVehicle)
         {
 
             var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
@@ -112,7 +113,8 @@ namespace Radar.API.Controllers
             await alertU.PassAlert(findVehicle);
             repository.Save();
             _logger.LogInformation($"Vehicle id: {id} has updated information");
-            return Ok($"Vehicle id: {id} has updated information");
+            
+            return new VehicleViewModel { Vehicle = findVehicle };
         }
 
     // DELETE api/<VehicleController>/5
