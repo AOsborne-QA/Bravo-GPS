@@ -5,9 +5,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Radar.Library
 {
-    public class Vehicle
+    public class Vehicle:VehicleInfo
     {
 
+        [Key]
+        public Guid VehicleID { get; set; }
 
     }
 }
