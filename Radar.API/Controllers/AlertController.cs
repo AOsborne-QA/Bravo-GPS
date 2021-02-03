@@ -22,6 +22,21 @@ namespace Radar.API.Controllers
         {
             _logger = logger;
             repository = repositoryWrapper;
+            GetConnection();
+        }
+
+        public async void GetConnection()
+        {
+            HubConnection hub = new HubConnectionBuilder().WithUrl("https://localhost:44383/alertHub").Build();
+            try
+            {
+                //tries an initial connection
+                await hub.StartAsync();
+            }
+            catch(Exception exc)
+            {
+
+            }
         }
 
         // GET: api/<AlertController>

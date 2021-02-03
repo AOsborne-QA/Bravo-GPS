@@ -14,7 +14,7 @@ namespace Radar.API.Hubs
         {
             await base.OnConnectedAsync();
         }
-        //THis calls the methods that work when the client is disconnected from the hub
+        //This calls the methods that work when the client is disconnected from the hub
         public async override Task OnDisconnectedAsync(Exception exception)
         {
             await base.OnDisconnectedAsync(exception);
@@ -26,5 +26,15 @@ namespace Radar.API.Hubs
             await Clients.All.SendAsync("RecieveAlert", alert);
         }
         
+        //This sends message to client to run AllAlerts
+        public async Task GetAlerts(Guid clientId)
+        {
+            await Clients.Client("Server").SendAsync("AllAlerts", clientId);
+        }
+
+        public async Task SendAllAlert(Guid clientId, List<Alert> alerts)
+        {
+            await Clients.Client(clientId.ToString()).SendAsync("ReceiveAllAlerts", alerts);
+        }
     }
 }
