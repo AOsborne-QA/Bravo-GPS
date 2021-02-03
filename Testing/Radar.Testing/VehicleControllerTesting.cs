@@ -47,7 +47,7 @@ namespace Radar.Testing
 
             //sample models
             addVehicle = new AddVehicle { Latitude = 10, Longitude = 10, VehicleHumidity = 10, VehicleTemp = 10 };
-            updateVehicle = new UpdateVehicle { Latitude = 12, Longitude = 10, VehicleHumidity = 10, VehicleTemp = 10 };
+            updateVehicle = new UpdateVehicle { Latitude = 999, Longitude = 999, VehicleHumidity = 60, VehicleTemp = 80 };
 
             //controller setup
             _logger = new Mock<ILogger<VehicleController>>();
@@ -70,7 +70,7 @@ namespace Radar.Testing
         }
         private Vehicle GetVehicle()
         {
-            return GetVehicles().ToList()[0];
+            return GetVehicles().ToList().FirstOrDefault();
         }
             [Fact]
         public void GetAllVehicles_Test()
@@ -128,21 +128,41 @@ namespace Radar.Testing
     Assert.Equal("Index", redirectToActionResult.ActionName);*/
     //mockRepo.Verify();
 
+        [Fact]
+        public void UpdateVehicle_Test()
+        {
+            // Setup Test
+            repoMock.Setup(repo => repo.Vehicle.FindByCondition(v => v.VehicleID == It.IsAny<Guid>())).Returns(GetVehicles());
+            repoMock.Setup(repo => repo.Vehicle.Update(GetVehicle())).Returns(vehicle);
+
+            // Act on Test
+
+            var vehicleControllerActionResult = vehicleController.UpdateVehicleStatus(GetVehicle().VehicleID, updateVehicle);
+
+            // Assert Test Results
+            Assert.NotNull(vehicleControllerActionResult);
+            /*Assert.IsType<ActionResult<VehicleViewModel>>(vehicleControllerActionResult);*/
+            //Assert.IsType<string>(vehicleControllerActionResult);
+        }
+
 
         [Fact]
         public void RemoveVehicle_Test()
         {
             //Arrange Test
-            repoMock.Setup(repo => repo.Vehicle.FindByCondition(v => v.VehicleID == It.IsAny<Guid>())).Returns(GetVehicles());
-            repoMock.Setup(repo => repo.Vehicle.Delete(GetVehicle()));
+            var vehicleToDelete = GetVehicle();
+            repoMock.Setup(repo => repo.Vehicle.FindByCondition(v => v.VehicleID == vehicleToDelete.VehicleID)).Returns(GetVehicles());
+            repoMock.Setup(repo => repo.Vehicle.Delete(vehicleToDelete));
+
             //Act
-            var vehicleControllerActionResult = vehicleController.RemoveVehicle(It.IsAny<Guid>());
+            var vehicleControllerActionResult = vehicleController.RemoveVehicle(GetVehicle().VehicleID);
+
             //Assert Test
+            
             Assert.NotNull(vehicleControllerActionResult);
+            var newLength = GetVehicles().ToList().Count;
+
         }
-
-
-        
 
     }
 }

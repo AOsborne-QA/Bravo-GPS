@@ -39,16 +39,10 @@ namespace Radar.API.Controllers
         [HttpGet("status/all")]
         public IEnumerable<VehicleViewModel> AllVehicleStatuses()
         {
-           
+            try
+            {
+                var allVehicles = repository.Vehicle.FindAll();
 
-            var allVehicles = repository.Vehicle.FindAll();
-            if (allVehicles == null)
-            {
-                _logger.LogWarning("There are no vehicles currently logged");
-                return null;
-            }
-            else
-            {
                 List<VehicleViewModel> vehicleViewModels = new List<VehicleViewModel>();
                 foreach (var vehicle in allVehicles)
                 {
@@ -56,22 +50,35 @@ namespace Radar.API.Controllers
                 }
                 _logger.LogInformation("Vehicles found for tracking. Result returned.");
                 return vehicleViewModels;
+
             }
+            catch
+            {
+                _logger.LogWarning("There are no vehicles currently logged");
+                return null;
+
+            }
+
         }
 
         // GET api/<VehicleController>/5
         [HttpGet("status/{id}")]
         public ActionResult<VehicleViewModel> VehicleStatus(Guid id)
         {
-            var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
-            if (findVehicle == null)
+            try
+            {
+                var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
+                var locatedVehicleViewModel = new VehicleViewModel { Vehicle = findVehicle };
+                _logger.LogInformation($"Vehicle with id {id} has been located and information outputted");
+                return locatedVehicleViewModel;
+
+            }
+            catch
             {
                 _logger.LogWarning("No vehicle with this ID has been found. Please recheck ID entered");
                 return NotFound($"Vehicle with ID of {id} was not found. Please recheck ID entered");
             }
-            var locatedVehicleViewModel = new VehicleViewModel { Vehicle = findVehicle };
-            _logger.LogInformation($"Vehicle with id {id} has been located and information outputted");
-            return locatedVehicleViewModel;
+
         }
 
         // POST api/<VehicleController>
@@ -98,40 +105,49 @@ namespace Radar.API.Controllers
         [HttpPut("update/{id}")]
         public async Task<ActionResult<VehicleViewModel>> UpdateVehicleStatus(Guid id, [FromBody] UpdateVehicle updateVehicle)
         {
+            try
+            {
+                var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
+                findVehicle.Latitude = updateVehicle.Latitude;
+                findVehicle.Longitude = updateVehicle.Longitude;
+                findVehicle.VehicleHumidity = updateVehicle.VehicleHumidity;
+                findVehicle.VehicleTemp = updateVehicle.VehicleTemp;
+                repository.Vehicle.Update(findVehicle);
+                await alertU.PassAlert(findVehicle);
+                repository.Save();
+                _logger.LogInformation($"Vehicle id: {id} has updated information");
+                return Ok($"Vehicle id: {id} has updated information");
 
-            var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
-            repository.Vehicle.Update(findVehicle);
-            if (findVehicle == null)
+            }
+            catch
             {
                 _logger.LogError($"No vehicle with {id} has been found. Please recheck input.");
                 return NotFound($"No Vehicle with {id} has been found. Please recheck input.");
+
             }
-            findVehicle.Latitude = updateVehicle.Latitude;
-            findVehicle.Longitude = updateVehicle.Longitude;
-            findVehicle.VehicleHumidity = updateVehicle.VehicleHumidity;
-            findVehicle.VehicleTemp = updateVehicle.VehicleTemp;
-            await alertU.PassAlert(findVehicle);
-            repository.Save();
-            _logger.LogInformation($"Vehicle id: {id} has updated information");
-            
-            return new VehicleViewModel { Vehicle = findVehicle };
         }
 
-    // DELETE api/<VehicleController>/5
-    [HttpDelete("remove/{id}")]
-    public IActionResult RemoveVehicle(Guid id)
-    {
-            var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
-            if (findVehicle == null)
+        // DELETE api/<VehicleController>/5
+        [HttpDelete("remove/{id}")]
+        public IActionResult RemoveVehicle(Guid id)
+        {
+            try
             {
+                var findVehicle = repository.Vehicle.FindByCondition(v => v.VehicleID == id).FirstOrDefault();
+                _logger.LogInformation($"Removing vehicle id {id} from tracking.");
+                repository.Vehicle.Delete(findVehicle);
+                repository.Save();
+                _logger.LogInformation($"Vehicle with {id} is no longer tracked and has been removed.");
+                return Ok($"Vehicle with {id} is no longer tracked and has been removed.");
+
+            }
+            catch
+            {
+                // throw new NullReferenceException();
                 _logger.LogError($"No vehicle with {id} has been found. Please recheck input.");
                 return NotFound($"No Vehicle with {id} has been found. Please recheck input.");
             }
-            _logger.LogInformation($"Removing vehicle id {id} from tracking.");
-            repository.Vehicle.Delete(findVehicle);
-            repository.Save();
-            _logger.LogInformation($"Vehicle with {id} is no longer tracked and has been removed.");
-            return Ok($"Vehicle with {id} is no longer tracked and has been removed.");
+
         }
-}
+    }
 }
