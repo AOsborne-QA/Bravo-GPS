@@ -49,9 +49,9 @@ public void GetAllVehicles_Test()
 
 
 ## Built With
-*.[VisualStudio2019](https://visualstudio.microsoft.com/downloads/) - .NET IDE
+* [VisualStudio2019](https://visualstudio.microsoft.com/downloads/) - .NET IDE
 
-*.[EntityFramework].(https://docs.microsoft.com/en-us/ef/) - Object Relational Mapping Framework
+* [EntityFramework](https://docs.microsoft.com/en-us/ef/) - Object Relational Mapping Framework
 
 
 ## Versioning
