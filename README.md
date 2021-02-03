@@ -18,9 +18,14 @@ The tech/frameworks used to run this project are as follows:
 
 [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/) An Integrated Development environment which is recommended.
 
-## Code Example 
-
 ## Code Style
+
+This project implements the Model-View-Controller (MVC) and Repository design pattern.
+
+The project set up its database using the Object Relational Mapper (ORM) which allowed the database tables to be created and updated based on classes defined in the application through the use of migrations.
+
+## Code Example
+
 
 ### Installing
 
