@@ -26,6 +26,13 @@
             <Label Content="Longitude"/>
             <TextBox Name="LongitudeBox"/>
         </StackPanel>
+        <StackPanel Grid.Column="1">
+            <Label Content="Passed Alert" />
+            <ListBox Grid.Column="1" Name="AlertList" />
+            
+        </StackPanel>
+
+
 
 
     </Grid>

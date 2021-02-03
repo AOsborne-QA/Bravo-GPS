@@ -48,6 +48,7 @@ namespace Radar.Desktop
                 Debug.Assert(connection.State == HubConnectionState.Disconnected);
                 return Task.CompletedTask;
             };
+            AlertList.Items.Add();
         }
         private async void connectButton_Click(object sender, RoutedEventArgs e)
         {
