@@ -1,4 +1,4 @@
-Test Coverage: 70%
+Test Coverage: 71.4%
 
 # Vehicle Perfomance Monitoring Desktop Application
 
