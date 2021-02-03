@@ -47,7 +47,7 @@ namespace Radar.Library.Utility
         public Alert RetrieveTempAlert(Vehicle x)
         {
             Alert alert = CreateAlert(x);
-            alert.AlertType = "Humidity";
+            alert.AlertType = "Temperature";
             if (x.VehicleTemp > 25 || x.VehicleTemp < -60)
             {
                 // (Temp) Alert is set to red
