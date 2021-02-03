@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Radar.API.Hubs;
 using Radar.Library;
 using Radar.Library.Interfaces;
 using Radar.Library.Models.Binding;
@@ -9,9 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR.Client;
 using Radar.Library.Utility;
-using Radar.Library.Models.Entity;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -39,25 +36,16 @@ namespace Radar.API.Controllers
         [HttpGet("status/all")]
         public IEnumerable<VehicleViewModel> AllVehicleStatuses()
         {
-            try
+            var allVehicles = repository.Vehicle.FindAll();
+
+            List<VehicleViewModel> vehicleViewModels = new List<VehicleViewModel>();
+            foreach (var vehicle in allVehicles)
             {
-                var allVehicles = repository.Vehicle.FindAll();
-
-                List<VehicleViewModel> vehicleViewModels = new List<VehicleViewModel>();
-                foreach (var vehicle in allVehicles)
-                {
-                    vehicleViewModels.Add(new VehicleViewModel() { Vehicle = vehicle });
-                }
-                _logger.LogInformation("Vehicles found for tracking. Result returned.");
-                return vehicleViewModels;
-
+                vehicleViewModels.Add(new VehicleViewModel() { Vehicle = vehicle });
             }
-            catch
-            {
-                _logger.LogWarning("There are no vehicles currently logged");
-                return null;
+            _logger.LogInformation("Vehicles found for tracking. Result returned.");
+            return vehicleViewModels;
 
-            }
 
         }
 
