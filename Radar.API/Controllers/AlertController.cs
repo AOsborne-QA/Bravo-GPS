@@ -25,33 +25,42 @@ namespace Radar.API.Controllers
         }
 
         // GET: api/<AlertController>
-        [HttpGet("all")]
+        [HttpGet("view/all")]
         public IEnumerable<Alert> ViewAll()
         {
             var allAlerts = repository.Alert.FindAll();
 
-            if(allAlerts == null)
+            if (allAlerts == null)
             {
                 _logger.LogWarning("There are no alerts currently logged");
                 return null;
-            } else
+            }
+            else
             {
                 List<Alert> alerts = new List<Alert>();
-                foreach(var alert in allAlerts)
+                foreach (var alert in allAlerts)
                 {
                     alerts.Add(alert);
                 }
-                _logger.LogInformation("Vehicles found for tracking. Result returned.");
+                _logger.LogInformation("Alerts found and returned.");
                 return alerts;
             }
-            
+
         }
 
         // GET api/<AlertController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("view/{id}")]
+        public ActionResult<Alert> ViewAlert(int id)
         {
-            return "value";
+            var findAlert = repository.Alert.FindByCondition(a => a.ID == id).FirstOrDefault();
+
+            if (findAlert == null)
+            {
+                _logger.LogWarning($"Unable to locate alert with id {id}. Please recheck input.");
+                return NotFound($"Unable to locate alert with id {id}. Please recheck input.");
+            }
+            _logger.LogInformation($"Alert with id {id} has been found and information outputted");
+            return findAlert;
         }
 
         // POST api/<AlertController>
