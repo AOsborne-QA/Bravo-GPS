@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Radar.Library.Models.Entity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Radar.API.Hubs
@@ -26,22 +24,6 @@ namespace Radar.API.Hubs
             await Clients.All.SendAsync("RecieveAlert", alert);
         }
         
-       /* -----To be used for future implementation between desktop and client---------
-        public async Task GetAlerts(Guid clientId)
-        {
-            await Clients.Groups("Server").SendAsync("AllAlerts", clientId);
-        }
-
-        public async Task SendAllAlert(Guid clientId, List<Alert> alerts)
-        {
-            await Clients.Client(clientId.ToString()).SendAsync("ReceiveAllAlerts", alerts);
-        }
-
-        public async Task JoinGroup(string group)
-        {
-            await Groups.AddToGroupAsync(this.Context.ConnectionId, "group");
-        }*/
-
         
     }
 }

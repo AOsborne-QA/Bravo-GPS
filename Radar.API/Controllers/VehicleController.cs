@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Radar.API.Hubs;
 using Radar.Library;
 using Radar.Library.Interfaces;
 using Radar.Library.Models.Binding;
@@ -9,9 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR.Client;
 using Radar.Library.Utility;
-using Radar.Library.Models.Entity;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
