@@ -31,7 +31,7 @@ The project set up its database using the Object Relational Mapper (ORM) which a
 
 ## Running Tests
 
-## Deployment
+
 
 ## Built With
 
