@@ -1,11 +1,16 @@
 ﻿
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR.Client;
+using Radar.Library;
 using Radar.Library.Models.Entity;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,7 +22,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using Newtonsoft.Json;
+using Radar.Library.Models.ViewModel;
 
 namespace Radar.Desktop
 {
@@ -27,11 +33,17 @@ namespace Radar.Desktop
     public partial class MainWindow : Window
     {
         HubConnection connection;
+        HttpClient client;
+        string path;
         public MainWindow()
         {
             InitializeComponent();
-                //this sets up the initial connection, need to pass in the URL
+                //this sets up the initial connection to signalR, need to pass in the URL
             connection = new HubConnectionBuilder().WithUrl("https://localhost:44383/alertHub").Build();
+
+            //this sets up the connection to the API
+            client = new HttpClient();
+            path = "https://localhost:44383/api/vehicle/";
 
             connection.Reconnecting += error =>
             {
@@ -112,6 +124,45 @@ namespace Radar.Desktop
                 });
             });
 
+        }
+        private async void GetButton_Click(object sender ,RoutedEventArgs e)
+        {
+            Vehicle vehicle = new Vehicle();
+            VehicleViewModel vView = new VehicleViewModel();
+     
+            string vehicleID = GetIdBox.Text;
+            Uri route = new Uri(path + "status/" + vehicleID);
+            HttpResponseMessage response = await client.GetAsync(route);
+            if (response.IsSuccessStatusCode)
+            {
+                vView = response.Content.ReadAsAsync<VehicleViewModel>().Result;
+                vehicle = vView.Vehicle;
+            }
+            GetHumidityBox.Text = vehicle.VehicleHumidity.ToString();
+            GetTemperatureBox.Text = vehicle.VehicleTemp.ToString();
+            GetLatitudeBox.Text = vehicle.Latitude.ToString();
+            GetLongitudeBox.Text = vehicle.Longitude.ToString();
+
+        }
+
+        public async void GetAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            Vehicle vehicle = new Vehicle();
+            List<VehicleViewModel> vView = new List<VehicleViewModel>();
+            Uri route = new Uri(path + "status/all");
+            HttpResponseMessage response = await client.GetAsync(route);
+            if (response.IsSuccessStatusCode)
+            {
+                vView = response.Content.ReadAsAsync<List<VehicleViewModel>>().Result;
+            }
+            foreach(var a in vView)
+            {
+                GetAllBox.Items.Add(a.Vehicle.VehicleID);
+                string T = ("Temperature: " + a.Vehicle.VehicleTemp.ToString());
+                GetAllBox.Items.Add(T);
+                string H = ("Humidity: " + a.Vehicle.VehicleHumidity.ToString());
+                GetAllBox.Items.Add(H);
+            }
         }
 
 
