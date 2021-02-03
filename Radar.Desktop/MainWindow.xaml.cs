@@ -24,6 +24,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Newtonsoft.Json;
 using Radar.Library.Models.ViewModel;
+using Radar.Library.Models.Binding;
 
 namespace Radar.Desktop
 {
@@ -163,6 +164,31 @@ namespace Radar.Desktop
                 string H = ("Humidity: " + a.Vehicle.VehicleHumidity.ToString());
                 GetAllBox.Items.Add(H);
             }
+        }
+        public async void UpdateButton_Click(object sender, RoutedEventArgs e)
+        {
+            VehicleViewModel vView = new VehicleViewModel();
+            string vehicleID = UpdateIDBox.Text;
+            Uri route = new Uri(path + "status/" + vehicleID);
+            HttpResponseMessage response = await client.GetAsync(route);
+            if (response.IsSuccessStatusCode)
+            {
+                vView = response.Content.ReadAsAsync<VehicleViewModel>().Result;
+            }
+
+            route = new Uri(path + "update/" + vView.Vehicle.VehicleID);
+            vView.Vehicle.VehicleHumidity = float.Parse(UpdateHumidityBox.Text);
+            vView.Vehicle.VehicleTemp = float.Parse(UpdateTemperatureBox.Text);
+
+            UpdateVehicle updateVehicle = new UpdateVehicle()
+            {
+                VehicleHumidity = vView.Vehicle.VehicleHumidity,
+                VehicleTemp = vView.Vehicle.VehicleTemp,
+                Latitude = vView.Vehicle.Latitude,
+                Longitude = vView.Vehicle.Longitude
+            };
+            HttpResponseMessage UpdateResponse = await client.PutAsJsonAsync(route ,updateVehicle);
+
         }
 
 
