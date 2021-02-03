@@ -7,6 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Radar.API.Hubs;
+using Radar.Library.Data;
+using Radar.Library.Interfaces;
+using Radar.Library.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,8 +30,9 @@ namespace Radar.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddControllers();
+            services.AddRouting(r => r.LowercaseUrls = true);
+           services.AddSignalR(); 
+           services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Radar.API", Version = "v1" });
@@ -53,6 +58,7 @@ namespace Radar.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<AlertHub>("/alertHub");
             });
         }
     }
