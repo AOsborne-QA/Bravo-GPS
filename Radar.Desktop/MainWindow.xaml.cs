@@ -48,7 +48,6 @@ namespace Radar.Desktop
                 Debug.Assert(connection.State == HubConnectionState.Disconnected);
                 return Task.CompletedTask;
             };
-            AlertList.Items.Add();
         }
         private async void connectButton_Click(object sender, RoutedEventArgs e)
         {
@@ -74,6 +73,7 @@ namespace Radar.Desktop
                     TemperatureBox.Text = alert.VehicleTemp.ToString();
                     LatitudeBox.Text = alert.Latitude.ToString();
                     LongitudeBox.Text = alert.Longitude.ToString();
+                    TimeStampBox.Text = alert.AlertTime.ToString();
                     if (alert.AlertColour == "Red")
                     {
                         if (alert.AlertType == "Temperature")
