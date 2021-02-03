@@ -44,8 +44,8 @@ namespace Radar.Testing
         private IEnumerable<Alert> GetAlerts()
         {
             var alerts = new List<Alert> {
-                new Alert() { VehicleID=Guid.NewGuid(),AlertTime=DateTime.Now,AlertColour="Red",AlertType="Humidity"},
-                new Alert() {VehicleID=Guid.NewGuid(),AlertTime=DateTime.Now,AlertColour="Amber",AlertType="Temperature"}
+                new Alert() {ID=1, VehicleID=Guid.NewGuid(),AlertTime=DateTime.Now,AlertColour="Red",AlertType="Humidity"},
+                new Alert() {ID=2, VehicleID=Guid.NewGuid(),AlertTime=DateTime.Now,AlertColour="Amber",AlertType="Temperature"}
             };
             return alerts;
         }
@@ -59,7 +59,16 @@ namespace Radar.Testing
             var controllerActionResult = alertController.ViewAll();
             //Assert
             Assert.NotNull(controllerActionResult);
-
+        }
+        [Fact]
+        public void ViewAlert_Test()
+        {
+            //Arrangement
+            repoMock.Setup(repo => repo.Alert.FindByCondition(c => c.ID == It.IsAny<int>())).Returns(GetAlerts());
+            //Action
+            var controllerActionResult=alertController.ViewAlert(It.IsAny<int>());
+            //Assert
+            Assert.NotNull(controllerActionResult);
         }
     }
 }
