@@ -13,7 +13,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel Margin ="4" VerticalAlignment="Center">
             <Button Name="ConnectButton" Content="Connect" Click="connectButton_Click"/>
-            
+
             <TextBox Name ="ConnectBox"/>
             <Label Content="Vehicle ID"/>
             <TextBox Name="VehilceIDBox"/>
@@ -26,9 +26,6 @@
             <Label Content="Longitude"/>
             <TextBox Name="LongitudeBox"/>
         </StackPanel>
-
-
-
 
 
     </Grid>

@@ -26,5 +26,6 @@ namespace Radar.API.Hubs
             await Clients.All.SendAsync("RecieveAlert", alert);
         }
         
+        
     }
 }
