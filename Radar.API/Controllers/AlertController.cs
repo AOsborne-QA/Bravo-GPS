@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using Radar.Library.Interfaces;
 using Radar.Library.Models.Entity;
+using Radar.Library.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace Radar.API.Controllers
 
         // GET: api/<AlertController>
         [HttpGet("view/all")]
-        public IEnumerable<Alert> ViewAll()
+        public IEnumerable<AlertViewModel> ViewAll()
         {
             var allAlerts = repository.Alert.FindAll();
 
@@ -37,20 +38,20 @@ namespace Radar.API.Controllers
             }
             else
             {
-                List<Alert> alerts = new List<Alert>();
+                List<AlertViewModel> alertViewModels = new List<AlertViewModel>();
                 foreach (var alert in allAlerts)
                 {
-                    alerts.Add(alert);
+                    alertViewModels.Add(new AlertViewModel() { Alert = alert });
                 }
                 _logger.LogInformation("Alerts found and returned.");
-                return alerts;
+                return alertViewModels;
             }
 
         }
 
         // GET api/<AlertController>/5
         [HttpGet("view/{id}")]
-        public ActionResult<Alert> ViewAlert(int id)
+        public ActionResult<AlertViewModel> ViewAlert(int id)
         {
             var findAlert = repository.Alert.FindByCondition(a => a.ID == id).FirstOrDefault();
 
@@ -59,27 +60,10 @@ namespace Radar.API.Controllers
                 _logger.LogWarning($"Unable to locate alert with id {id}. Please recheck input.");
                 return NotFound($"Unable to locate alert with id {id}. Please recheck input.");
             }
+            var foundAlertViewModel = new AlertViewModel { Alert = findAlert };
             _logger.LogInformation($"Alert with id {id} has been found and information outputted");
-            return findAlert;
+            return foundAlertViewModel;
         }
 
-        // POST api/<AlertController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-
-        }
-
-        // PUT api/<AlertController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<AlertController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
