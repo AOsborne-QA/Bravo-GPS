@@ -1,11 +1,17 @@
-Test Coverage: 71.4%
+Test Coverage Breakdown: 
+ - VehicleController 71.4%
+ - AlertCotnroller 80%
 
 # Vehicle Perfomance Monitoring Desktop Application
 
-This project is for a perfomance monitoring application that tracks a group of ground vehicles where GPS, temperature, and humidity is monitored and tracked in real time.
+This project is for a perfomance monitoring application that tracks a group of ground vehicles where GPS, temperature, and humidity is monitored and tracked in real time. When the humidity or temperature of a vehicle reaches a pre-specified level, a read alert is created which is stored within a database and using RSignal, it is shown to the user within the Desktop GUI. The feeds for temperature, humidity, and vehicle location are updated through API endpoints. 
 
 ## Getting Started
 To get started on your own machine fork the project onto your own repository, then use the command git clone, followed by the url of the forked repository. This will get the project onto your own machine for development, testing, and usage purposes.
+
+You can use the below command to clone this repository to your local machine.
+
+```git clone https://github.com/AOsborne-QA/Bravo-GPS.git```
 
 ### Prerequisites
 The tech/frameworks used to run this project are as follows:
@@ -17,6 +23,20 @@ The tech/frameworks used to run this project are as follows:
 [WPF](https://visualstudio.microsoft.com/vs/features/wpf/) a free and open source graphical subsystem for rendering user interfaced in Windows based applications.
 
 [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/) An Integrated Development environment which is recommended.
+
+#### NuGet Packages
+
+- Microsoft.EntityFrameworkCore
+- Microsoft.EntityFrameworkCore.SqlServer
+- Microsoft.EntityFrameworkCore.Design
+- System.Text.Encodings.Web
+- Microsoft.AspNet.WebApi.Client
+- Microsoft.AspNetCore.SignalR.Client
+- Microsoft.NET.Test.Sdk
+- Swashbuckle.AspNetCore
+- Moq
+- xunit
+- xunit.runner.visualstudio
 
 ## Code Style
 
